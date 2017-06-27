@@ -224,6 +224,7 @@ def evaluate(parameters, f_eval, raw_sentences, parsed_sentences,
     n_tags = len(id_to_tag)
     predictions = []
     count = np.zeros((n_tags, n_tags), dtype=np.int32)
+    sent_acc = []
 
     for raw_sentence, data in zip(raw_sentences, parsed_sentences):
         input = create_input(data, parameters, False)
@@ -235,6 +236,7 @@ def evaluate(parameters, f_eval, raw_sentences, parsed_sentences,
         assert len(y_preds) == len(y_reals)
         p_tags = [id_to_tag[y_pred] for y_pred in y_preds]
         r_tags = [id_to_tag[y_real] for y_real in y_reals]
+        sent_acc.append(1 if all(y_preds == y_reals) else 0)
         if parameters['tag_scheme'] == 'iobes':
             p_tags = iobes_iob(p_tags)
             r_tags = iobes_iob(r_tags)
@@ -279,4 +281,4 @@ def evaluate(parameters, f_eval, raw_sentences, parsed_sentences,
     )
 
     # F1 on all entities
-    return float(eval_lines[1].strip().split()[-1])
+    return float(eval_lines[1].strip().split()[-1]), 100. * sum(sent_acc) / len(sent_acc)

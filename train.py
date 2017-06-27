@@ -216,12 +216,12 @@ for epoch in xrange(n_epochs):
         if i % 50 == 0 and i > 0 == 0:
             print "%i, cost average: %f" % (i, np.mean(epoch_costs[-50:]))
         if count % freq_eval == 0:
-            dev_score = evaluate(parameters, f_eval, dev_sentences,
+            dev_score, dev_sent_score = evaluate(parameters, f_eval, dev_sentences,
                                  dev_data, id_to_tag, dico_tags)
-            test_score = evaluate(parameters, f_eval, test_sentences,
+            test_score, test_sent_score = evaluate(parameters, f_eval, test_sentences,
                                   test_data, id_to_tag, dico_tags)
-            print "Score on dev: %.5f" % dev_score
-            print "Score on test: %.5f" % test_score
+            print "Score on dev: %.5f (span) %.5f (sent)" % (dev_score, dev_sent_score)
+            print "Score on test: %.5f (span) %.5f (sent)" % (test_score, test_sent_score)
             if dev_score > best_dev:
                 best_dev = dev_score
                 print "New best score on dev."
